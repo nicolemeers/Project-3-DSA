@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <map>
 #include <string>
+#include <AdjacencyList.h>
 
 using namespace std;
 
@@ -28,6 +29,13 @@ int main() {
     // read the data from the file (to fill the lists)
     string fileName = "sentiment.csv";
     getDatafromCSVFILE(fileName);
+    
+     // create edges between products in the same price range and with similar sentiments or ratings
+    createEdgesPrice();
+    createEdgesSentiment();
+    createEdgesRating();
+
+
 
 
     //query the user:
@@ -46,8 +54,6 @@ int main() {
 
     }
     */
-
-
 
 
 
@@ -101,13 +107,14 @@ void getDatafromCSVFILE(string fileName) {
 
 
         // store the price, rate, and sentiments in the appropriate list
+        // creates a new Product object with the extracted data
+        Product p = {name, price, rate, sentiment};
 
-
+        // stores the Product in the adjacency list
+        adjacencyListSentiment[sentiment].push_back(p);
+        adjacencyListPrice[to_string(price)].push_back(p);
+        adjacencyListRating[to_string(rate)].push_back(p);
     }
-
-
-
-
 }
 
 int parsePrice(string price) {
