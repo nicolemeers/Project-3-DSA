@@ -1,10 +1,8 @@
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include <map>
-#include <string>
-#include <AdjacencyList.h>
+//#include "AdjacencyList.h"
+#include "depthFirstSearch.cpp"
 
 using namespace std;
 
