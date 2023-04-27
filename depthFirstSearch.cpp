@@ -58,7 +58,7 @@ void dfs(map<string, vector<Product>>& graph, vector<string>& startingProducts) 
 
         // get the node in the map. Get the vector attached to it
         vector<Product> adjacent;
-        adjacent = graph[current];      //don't work bc we have the name of the string, not the actual input
+        adjacent = graph[current];
 
         for (int i = 0; i < adjacent.size(); i++) {
             if (visited.find(adjacent.at(i).name) != visited.end()) {
