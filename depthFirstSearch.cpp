@@ -5,171 +5,69 @@
 #include <set>
 #include <map>
 #include <stack>
+#include "AdjacencyList.h"
 
 using namespace std;
 
 
-string findStartNodeSentiment(map<string, vector<pair<string, string>>>& graph, string userInput);
-string findStartNodeRank(map<string, vector<pair<string, int>>>& graph, string userInput);
-string findStartNodePrice(map<string, vector<pair<string, int>>>& graph, string userInput);
-vector<string> dfsSentiment(map<string, vector<pair<string, string>>>& graph, string startingProduct);
-vector<string> dfs(map<string, vector<pair<string, int>>>& graph, string startingProduct);
+void dfs(map<string, vector<Product>>& graph, vector<string>& startingProducts);
+void dfsAll(vector<string>& startingProducts, map<string, vector<Product>>& adjacencyListSentiment, 
+            map<string, vector<Product>>& adjacencyListPrice, map<string, vector<Product>>& adjacencyListRating);
 
 
-string findStartNodeSentiment(map<string, vector<pair<string, string>>>& graph, string userInput) {
 
-    auto iter = graph.begin();
-    for (iter; iter != graph.end(); iter++) {
-        for (int i = 0; i < iter->second.size(); i++) {
-            if (iter->second.at(i).second == userInput) {
-                return iter->second.at(i).first;
-            }
-        }
-    }
 
-    return "null";
+void dfsAll(vector<string>& startingProducts, map<string, vector<Product>>& adjacencyListSentiment, 
+            map<string, vector<Product>>& adjacencyListPrice, map<string, vector<Product>>& adjacencyListRating) {
+
+    dfs(adjacencyListSentiment, startingProducts);        // sentiment
+    dfs(adjacencyListRating, startingProducts);       // rating
+    dfs(adjacencyListPrice, startingProducts);    // price
 
 }
 
-string findStartNodeRank(map<string, vector<pair<string, int>>>& graph, string userInput) {
+void dfs(map<string, vector<Product>>& graph, vector<string>& startingProducts) {
 
-    int input = stoi(userInput);
-
-    auto iter = graph.begin();
-    for (iter; iter != graph.end(); iter++) {
-        for (int i = 0; i < iter->second.size(); i++) {
-            if (iter->second.at(i).second == input) {
-                return iter->second.at(i).first;
-            }
-        }
-    }
-
-    return "null";
-
-}
-
-string findStartNodePrice(map<string, vector<pair<string, int>>>& graph, string userInput) {
-
-    int input = stoi(userInput);
-
-    // we need to check the range, not the specific value
-    // for now, assume within 20% of desired product
-    float rangeShift = (float)input * 0.2;
-    int upperRange = input + rangeShift;
-    int lowerRange = input - rangeShift;
-
-    //so +/- this value would still be a valid input
-
-    auto iter = graph.begin();
-    for (iter; iter != graph.end(); iter++) {
-        for (int i = 0; i < iter->second.size(); i++) {
-            if (iter->second.at(i).second == input) {
-                return iter->second.at(i).first;
-            }
-            else if (iter->second.at(i).second <= upperRange && iter->second.at(i).second >= lowerRange) {
-                return iter->second.at(i).first;
-            }
-        }
-    }
-
-
-    return "null";
-
-}
-
-// we are input one attribute for the search
-// we are input an adjacency list
-// edges -> similarity between products
-// -> ex: price. Specific price range -> edge between two products in the list means they are within the same price range
-
-// we will search budget, rating, and sentiment
-
-
-
-// lets do the sentiment first
-
-// sentiment can be:
-        // positive
-        // neutral
-        // negative
-
-        // we are given a preference. We need to make sure with give a starting node with the correct preference
-vector<string> dfsSentiment(map<string, vector<pair<string, string>>>& graph, string startingProduct){
-
-    // we output the list of products that is similar to what was input by the user
-    vector<string> results;
-
-    // we add the name to the stack
+    // create a stack to store nodes to visit
     stack<string> stk;
+    // create a set to keep track of visited nodes
     set<string> visited;
-    vector<pair<string,string>> adjacent;
-    string current;                 // the "u" vertex that we wil look at
 
-    stk.push(startingProduct);
-    results.push_back(startingProduct);
+    string current;         // the "u" vertex we will keep track of
 
-    while (!stk.empty()) {
-        
+    // add the starting product to the stack
+    for (string startProduct : startingProducts) {
+        // add the start node to the queue and mark it as visited
+        stk.push(startProduct);
+    }
+
+    while(!stk.empty()) {
+
         current = stk.top();
         stk.pop();
 
-        // check if the vertex has been visited
+        visited.emplace(current);
+
+        // print out the current product
+        cout << current << endl;
+
+        // loop through descendents (adjacent) of current node
         if (visited.find(current) != visited.end()) {
             continue;
         }
 
-        // set the current vertex to visited
-        visited.emplace(current);
-        results.push_back(current);
+        // get the node in the map. Get the vector attached to it
+        vector<Product> adjacent;
+        adjacent = graph[current];      //don't work bc we have the name of the string, not the actual input
 
-        // get all of the adjacent nodes -> if not visited, add to stack
-        adjacent = graph[current];
         for (int i = 0; i < adjacent.size(); i++) {
-            if (visited.find(adjacent.at(i).first) != visited.end()) {
+            if (visited.find(adjacent.at(i).name) != visited.end()) {
                 continue;
             }
-            stk.push(adjacent.at(i).first);
+            stk.push(adjacent.at(i).name);
+            visited.emplace(adjacent.at(i));
         }
+
     }
-    return results;
-}
 
-vector<string> dfs(map<string, vector<pair<string, int>>>& graph, string startingProduct){
-
-    // we output the list of products that is similar to what was input by the user
-    vector<string> results;
-
-    // we add the name to the stack
-    stack<string> stk;
-    set<string> visited;
-    vector<pair<string,int>> adjacent;
-    string current;                 // the "u" vertex that we wil look at
-
-    stk.push(startingProduct);
-    results.push_back(startingProduct);
-
-    while (!stk.empty()) {
-        
-        current = stk.top();
-        stk.pop();
-
-        // check if the vertex has been visited
-        if (visited.find(current) != visited.end()) {
-            continue;
-        }
-
-        // set the current vertex to visited
-        visited.emplace(current);
-        results.push_back(current);
-
-        // get all of the adjacent nodes -> if not visited, add to stack
-        adjacent = graph[current];
-        for (int i = 0; i < adjacent.size(); i++) {
-            if (visited.find(adjacent.at(i).first) != visited.end()) {
-                continue;
-            }
-            stk.push(adjacent.at(i).first);
-        }
-    }
-    return results;
 }
