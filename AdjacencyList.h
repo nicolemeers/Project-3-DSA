@@ -136,7 +136,7 @@ void readEdges(map<string, vector<Product>> adjacencyList) {
 
 //BFS below using adjacenecy list -->
 
-string getStartingProductByPrice(int price) { 
+string getStartingProductByPrice(int price, map<string, vector<Product>> adjacencyListPrice) { 
     for (auto const& priceGroup : adjacencyListPrice) {
         vector<Product> products = priceGroup.second;
 
@@ -152,7 +152,7 @@ string getStartingProductByPrice(int price) {
     return "";
 }
 
-string getStartingProductByRating(int rating) {
+string getStartingProductByRating(int rating, map<string, vector<Product>> adjacencyListRating) {
     for (auto const& ratingGroup : adjacencyListRating) {
         vector<Product> products = ratingGroup.second;
 
@@ -168,7 +168,7 @@ string getStartingProductByRating(int rating) {
     return "";
 }
 
-string getStartingProductBySentiment(string sentiment) {
+string getStartingProductBySentiment(string sentiment, map<string, vector<Product>> adjacencyListSentiment) {
     for (auto const& sentimentGroup : adjacencyListSentiment) {
         vector<Product> products = sentimentGroup.second;
 
