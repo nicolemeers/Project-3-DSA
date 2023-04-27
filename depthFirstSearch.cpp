@@ -10,15 +10,15 @@
 using namespace std;
 
 
-void dfs(map<string, vector<Product>>& graph, vector<string>& startingProducts);
-void dfsAll(vector<string>& startingProducts, map<string, vector<Product>>& adjacencyListSentiment, 
-            map<string, vector<Product>>& adjacencyListPrice, map<string, vector<Product>>& adjacencyListRating);
+void dfs(map<string, vector<Product>> graph, vector<string> startingProducts);
+void dfsAll(vector<string> startingProducts, map<string, vector<Product>> adjacencyListSentiment, 
+            map<string, vector<Product>> adjacencyListPrice, map<string, vector<Product>> adjacencyListRating);
 
 
 
 
-void dfsAll(vector<string>& startingProducts, map<string, vector<Product>>& adjacencyListSentiment, 
-            map<string, vector<Product>>& adjacencyListPrice, map<string, vector<Product>>& adjacencyListRating) {
+void dfsAll(vector<string> startingProducts, map<string, vector<Product>> adjacencyListSentiment, 
+            map<string, vector<Product>> adjacencyListPrice, map<string, vector<Product>> adjacencyListRating) {
 
     dfs(adjacencyListSentiment, startingProducts);        // sentiment
     dfs(adjacencyListRating, startingProducts);       // rating
@@ -26,7 +26,7 @@ void dfsAll(vector<string>& startingProducts, map<string, vector<Product>>& adja
 
 }
 
-void dfs(map<string, vector<Product>>& graph, vector<string>& startingProducts) {
+void dfs(map<string, vector<Product>> graph, vector<string> startingProducts) {
 
     // create a stack to store nodes to visit
     stack<string> stk;
@@ -46,7 +46,7 @@ void dfs(map<string, vector<Product>>& graph, vector<string>& startingProducts) 
         current = stk.top();
         stk.pop();
 
-        visited.emplace(current);
+        visited.insert(current);
 
         // print out the current product
         cout << current << endl;
@@ -65,7 +65,7 @@ void dfs(map<string, vector<Product>>& graph, vector<string>& startingProducts) 
                 continue;
             }
             stk.push(adjacent.at(i).name);
-            visited.emplace(adjacent.at(i));
+            visited.insert(adjacent.at(i).name);
         }
 
     }
