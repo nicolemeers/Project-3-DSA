@@ -8,7 +8,8 @@ using namespace std;
 
 
 // helper functions
-void getDatafromCSVFILE(string fileName, Product adjacencyListSentiment, Product adjacencyListPrice, Product adjacencyListRating);
+void getDatafromCSVFILE(string fileName, map<string, vector<Product>>& adjacencyListSentiment, 
+        map<string, vector<Product>>& adjacencyListPrice, map<string, vector<Product>>& adjacencyListRating);
 string parseSentiment(string sentiment);
 int parsePrice(string price);
 int parseRate(string rate);
@@ -57,13 +58,14 @@ int main() {
         allStartingProducts.push_back(startingProductsByRating);
         allStartingProducts.push_back(startingProductsBySentiment);
 
+        cout << "DFS: " << endl;
         // call dfs
         dfsAll(allStartingProducts, adjacencyListSentiment, adjacencyListPrice, adjacencyListRating);
 
+        cout << "BFS: " << endl; 
         // call bfs with the combined starting prodcuts and the adjacency list
         bfsCombined(allStartingProducts, adjacencyListSentiment, adjacencyListPrice, adjacencyListRating);
-
-
+    
 
 
         cout << "Would you like to search again? (y/n) ";
@@ -249,4 +251,3 @@ string priceIntegrity(string price) {
     }
     return price;
 }
-
