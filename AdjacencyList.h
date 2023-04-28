@@ -101,11 +101,11 @@ void createEdgesRating() {
         for (int i = 0; i < products.size(); i++) {
             Product p1 = products[i];
 
-            // compare the current products with the rest of the products in the group
+            // compares the current products with the rest of the products in the group
             for (int j = i+1; j < products.size(); j++) {
                 Product p2 = products[j];
 
-                // calculate the rating difference between the two products
+                // calculates the rating difference between the two products
                 int ratingDiff = abs(p1.rating - p2.rating);
 
                 // if the rating difference is less than or equal to 1, adds edge between the two products
@@ -118,23 +118,9 @@ void createEdgesRating() {
     }
 }
 
-void readEdges(map<string, vector<Product>> adjacencyList) {
-    // loops through each key-value pair in the adjacency list
-    for (auto const& kv : adjacencyList) {
-        string productName = kv.first;
-        vector<Product> connectedProducts = kv.second;
-
-        // prints the edges for the current product
-        cout << "Edges for " << productName << ":" << endl;
-        for (Product product : connectedProducts) {
-            cout << "\t" << product.name << endl;
-        }
-    }
-}
 
 
-
-//BFS below using adjacenecy list -->
+// BFS below using adjacenecy list -->
 
 string getStartingProductByPrice(int price, map<string, vector<Product>> adjacencyListPrice) { 
     for (auto const& priceGroup : adjacencyListPrice) {
@@ -159,7 +145,7 @@ string getStartingProductByRating(int rating, map<string, vector<Product>> adjac
         for (int i = 0; i < products.size(); i++) {
             Product p = products[i];
 
-            if (p.rating = rating) {
+            if (p.rating == rating) {
                 return p.name;
             }
         }
@@ -184,64 +170,32 @@ string getStartingProductBySentiment(string sentiment, map<string, vector<Produc
     return "";
 }
 
-void bfs(vector<string> startingProducts, map<string, vector<Product>> adjacencyList) {
-    // create a queue to hold the nodes to be visited
-    queue<string> toVisit;
-    // create a set to keep track of the visited nodes
-    set<string> visited;
-
-    // loop through the starting products
-    for (string startProduct : startingProducts) {
-        // add the start node to the queue and mark it as visited
-        toVisit.push(startProduct);
-        visited.insert(startProduct);
-    }
-
-    // loop through the nodes in the queue
-    while (!toVisit.empty()) {
-        // get the next node from the front of the queue
-        string currentProduct = toVisit.front();
-        toVisit.pop();
-
-        // print the current node
-        cout << currentProduct << endl;
-
-        // loop through the neighbors of the current node
-        for (Product neighbor : adjacencyList[currentProduct]) {
-            // if the neighbor has not been visited, add it to the queue and mark it as visited
-            if (visited.find(neighbor.name) == visited.end()) {
-                toVisit.push(neighbor.name);
-                visited.insert(neighbor.name);
-            }
-        }
-    }
-}
 
 void bfsCombined(vector<string> startingProducts, map<string, vector<Product>> adjacencyListSentiment, map<string, vector<Product>> adjacencyListPrice, map<string, vector<Product>> adjacencyListRating) {
-    // create a queue to hold the nodes to be visited
+    // creates a queue to hold the nodes to be visited
     queue<string> toVisit;
-    // create a set to keep track of the visited nodes
+    // creates a set to keep track of the visited nodes
     set<string> visited;
 
-    // loop through the starting products
+    // loops through the starting products
     for (string startProduct : startingProducts) {
-        // add the start node to the queue and mark it as visited
+        // adds the start node to the queue and mark it as visited
         toVisit.push(startProduct);
         visited.insert(startProduct);
     }
 
-    // loop through the nodes in the queue
+    // loops through the nodes in the queue
     while (!toVisit.empty()) {
-        // get the next node from the front of the queue
+        // gets the next node from the front of the queue
         string currentProduct = toVisit.front();
         toVisit.pop();
 
-        // print the current node
+        // prints the current node
         cout << currentProduct << endl;
 
-        // loop through the neighbors of the current node
+        // loops through the neighbors of the current node
         for (Product neighbor : adjacencyListSentiment[currentProduct]) {
-            // if the neighbor has not been visited, add it to the queue and mark it as visited
+            // if the neighbor has not been visited, adds it to the queue and changes to visited
             if (visited.find(neighbor.name) == visited.end()) {
                 toVisit.push(neighbor.name);
                 visited.insert(neighbor.name);
@@ -249,7 +203,7 @@ void bfsCombined(vector<string> startingProducts, map<string, vector<Product>> a
         }
 
         for (Product neighbor : adjacencyListPrice[currentProduct]) {
-            // if the neighbor has not been visited, add it to the queue and mark it as visited
+            // if the neighbor has not been visited, adds to the queue and changes to visited
             if (visited.find(neighbor.name) == visited.end()) {
                 toVisit.push(neighbor.name);
                 visited.insert(neighbor.name);
@@ -257,7 +211,7 @@ void bfsCombined(vector<string> startingProducts, map<string, vector<Product>> a
         }
 
         for (Product neighbor : adjacencyListRating[currentProduct]) {
-            // if the neighbor has not been visited, add it to the queue and mark it as visited
+            // if the neighbor has not been visited, adds it to the queue aand changes to visited
             if (visited.find(neighbor.name) == visited.end()) {
                 toVisit.push(neighbor.name);
                 visited.insert(neighbor.name);
@@ -265,21 +219,3 @@ void bfsCombined(vector<string> startingProducts, map<string, vector<Product>> a
         }
     }
 }
-
-/* call for main : 
-// get the starting products
-string startingProductsByPrice = getStartingProductByPrice(userinput);
-string startingProductsByRating = getStartingProductByRating(userinput);
-string startingProductsBySentiment = getStartingProductBySentiment(userinput);
-
-// combine the starting products into a single vector
-vector<string> allStartingProducts;
-allStartingProducts.insert(allStartingProducts.end(), startingProductsByPrice.begin(), startingProductsByPrice.end());
-allStartingProducts.insert(allStartingProducts.end(), startingProductsByRating.begin(), startingProductsByRating.end());
-allStartingProducts.insert(allStartingProducts.end(), startingProductsBySentiment.begin(), startingProductsBySentiment.end());
-
-// call bfs with the combined starting products and the adjacency list
-bfsAll(allStartingProducts, adjacencyListSentiment, adjacencyListPrice, adjacencyListRating);
-
-*/
-
