@@ -101,11 +101,11 @@ void createEdgesRating() {
         for (int i = 0; i < products.size(); i++) {
             Product p1 = products[i];
 
-            // compares the current products with the rest of the products in the group
+            // compare the current products with the rest of the products in the group
             for (int j = i+1; j < products.size(); j++) {
                 Product p2 = products[j];
 
-                // calculates the rating difference between the two products
+                // calculate the rating difference between the two products
                 int ratingDiff = abs(p1.rating - p2.rating);
 
                 // if the rating difference is less than or equal to 1, adds edge between the two products
@@ -120,7 +120,7 @@ void createEdgesRating() {
 
 
 
-// BFS below using adjacenecy list -->
+//BFS below using adjacenecy list -->
 
 string getStartingProductByPrice(int price, map<string, vector<Product>> adjacencyListPrice) { 
     for (auto const& priceGroup : adjacencyListPrice) {
@@ -145,7 +145,7 @@ string getStartingProductByRating(int rating, map<string, vector<Product>> adjac
         for (int i = 0; i < products.size(); i++) {
             Product p = products[i];
 
-            if (p.rating == rating) {
+            if (p.rating = rating) {
                 return p.name;
             }
         }
@@ -170,8 +170,7 @@ string getStartingProductBySentiment(string sentiment, map<string, vector<Produc
     return "";
 }
 
-
-void bfsCombined(vector<string> startingProducts, map<string, vector<Product>> adjacencyListSentiment, map<string, vector<Product>> adjacencyListPrice, map<string, vector<Product>> adjacencyListRating) {
+void bfs(vector<string> startingProducts, map<string, vector<Product>> adjacencyList) {
     // creates a queue to hold the nodes to be visited
     queue<string> toVisit;
     // creates a set to keep track of the visited nodes
@@ -179,7 +178,7 @@ void bfsCombined(vector<string> startingProducts, map<string, vector<Product>> a
 
     // loops through the starting products
     for (string startProduct : startingProducts) {
-        // adds the start node to the queue and mark it as visited
+        // adds the start node to the queue and changes it to visited
         toVisit.push(startProduct);
         visited.insert(startProduct);
     }
@@ -194,28 +193,18 @@ void bfsCombined(vector<string> startingProducts, map<string, vector<Product>> a
         cout << currentProduct << endl;
 
         // loops through the neighbors of the current node
-        for (Product neighbor : adjacencyListSentiment[currentProduct]) {
-            // if the neighbor has not been visited, adds it to the queue and changes to visited
-            if (visited.find(neighbor.name) == visited.end()) {
-                toVisit.push(neighbor.name);
-                visited.insert(neighbor.name);
-            }
-        }
-
-        for (Product neighbor : adjacencyListPrice[currentProduct]) {
-            // if the neighbor has not been visited, adds to the queue and changes to visited
-            if (visited.find(neighbor.name) == visited.end()) {
-                toVisit.push(neighbor.name);
-                visited.insert(neighbor.name);
-            }
-        }
-
-        for (Product neighbor : adjacencyListRating[currentProduct]) {
-            // if the neighbor has not been visited, adds it to the queue aand changes to visited
+        for (Product neighbor : adjacencyList[currentProduct]) {
+            // if the neighbor has not been visited, add it to the queue aand changes it to visited
             if (visited.find(neighbor.name) == visited.end()) {
                 toVisit.push(neighbor.name);
                 visited.insert(neighbor.name);
             }
         }
     }
+}
+
+void bfsCombined(vector<string> startingProducts, map<string, vector<Product>> adjacencyListSentiment, map<string, vector<Product>> adjacencyListPrice, map<string, vector<Product>> adjacencyListRating) {
+        bfs(startingProducts, adjacencyListSentiment);        
+        bfs(startingProducts, adjacencyListRating);     
+        bfs(startingProducts, adjacencyListPrice);   
 }
